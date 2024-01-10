@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// An array of built-in commands
+char *builtins[] = {"ls", "cd", "pwd", "cp", "mv", "rm", "mkdir", "rmdir"};
+
+// A flag to indicate if the program is running as root
+int root = 0;
+
+// A flag to indicate if the program is interactive
+int interactive = 0;
+
+// A function to read the user input from stdin
+char *read_input() {
+    char *line = NULL;
+    size_t size = 0;
+    ssize_t nread;
+
+    // Read up to 1024 bytes from stdin
+    nread = getline(&line, &size, stdin);
+
+    // Check if there is any data available
+    if (nread == -1) {
+        // EOF or error occurred
+        return NULL;
+    }
+
+    // Trim any trailing whitespace from the line
+    while (strchr(line, ' ') != NULL) {
+        line++;
+    }
+
+    // Return the trimmed line
+    return line;
+}
+
+// A function to parse the user input into tokens
+void parse_input(char *line) {
+    char *token = NULL;
+    char *delim = " \t\n\r";
+
+    // Split the line by whitespace characters
+    token = strtok(line, delim);
+
+    // Loop until there are no more tokens
+    while (token != NULL) {
+        // Print each token on separate lines for readability
+        printf("%s\n", token);
+
+        // Get the next token by splitting by whitespace characters again
+        token = strtok(NULL, delim);
+    }
+}
+
+// A function to search for a program name in an array of built-in commands
+int search_program(char *name) {
+    int i;
+
+    // Loop through each built-in command in reverse order
+    for (i = sizeof(builtins) / sizeof(builtins[0]) - 1; i >= 0; i--) {
+        // Compare each command with the name using strcmp()
+        if (strcmp(name, builtins[i]) == 0) {
+            // Found a match, return its index in reverse order
+            return i;
+        }
+    }
+
+    // No match found, return -1
+    return -1;
+}
+
+// A function to execute the program or return an error message if not found using system()
+void execute_program(char *name) {
+    
+}
+
